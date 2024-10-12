@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Search Array with Countdown</title>
+		<script>
+			var topicsToSearch = ['Genetic Engineering', 'Cloud Computing', 'Virtual Assistants', '3D Printing', 'Smart Homes', 'Solar Energy', 'Drone Technology', 'Artificial General Intelligence', 'Big Data Analytics', 'Remote Work Technologies', 'Biodegradable Materials', 'Deep Learning', 'Climate Resilience', 'Hydrogen Energy', 'Quantum Cryptography', 'Smart Wearables', 'Neural Networks', 'Bioinformatics', 'Space Mining', 'Environmental Sustainability', 'Digital Twins', 'Renewable Energy Storage', 'Circular Economy', 'Personalized Medicine', 'Robotic Process Automation', 'Advanced Manufacturing', 'Carbon Capture', 'Smart Grids', 'AI Ethics', 'Self-Healing Materials'];
+
+			var index = 0;
+			var countdownIntervalId;
+
+			function searchNextBatch() {
+				// Search 3 topics
+				var searchCount = 0;
+				var intervalId = setInterval(function () {
+					if (index < topicsToSearch.length && searchCount < 3) {
+						var topic = topicsToSearch[index];
+						// Construct the search query URL for Bing
+						var searchUrl = 'https://www.bing.com/search?q=' + encodeURIComponent(topic) + '&cvid=dbbd90a4c82047c699c62747e6657d6d&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MgYIARBFGDsyBggCEAAYQDIGCAMQABhAMgYIBBAAGEAyBggFEAAYQDIGCAYQABhAMgYIBxAAGEAyBggIEAAYQNIBCDExMzVqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531';
+
+						// Open a new tab/window with the search query URL
+						window.open(searchUrl, '_blank');
+
+						// Print the current index on the page
+						document.getElementById('currentIndex').innerText = 'Current Index: ' + index;
+
+						index++;
+						searchCount++;
+					} else {
+						clearInterval(intervalId); // Stop after 3 searches
+						if (index < topicsToSearch.length) {
+							startCountdown(15 * 60); // Start the countdown for 15 minutes
+							setTimeout(searchNextBatch, 900000); // Wait for 15 minutes before starting the next batch
+						}
+					}
+				}, 20000); // 20 seconds interval between searches
+			}
+
+			// Function to start and display the countdown
+			function startCountdown(seconds) {
+				clearInterval(countdownIntervalId); // Clear any previous interval
+				countdownIntervalId = setInterval(function () {
+					if (seconds >= 0) {
+						var minutes = Math.floor(seconds / 60);
+						var remainingSeconds = seconds % 60;
+
+						// Format the time to display as MM:SS
+						var countdownText = minutes + 'm ' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds + 's';
+						document.getElementById('countdown').innerText = 'Next search in: ' + countdownText;
+
+						seconds--;
+					} else {
+						clearInterval(countdownIntervalId); // Stop the countdown when it reaches 0
+					}
+				}, 1000); // Update every second
+			}
+		</script>
+	</head>
+
+	<body>
+		<button onclick="searchNextBatch()">Start Search</button>
+		<p id="currentIndex">Current Index: 0</p>
+		<p id="countdown">Next search in: --</p>
+		<!-- Display the current index and countdown here -->
+	</body>
+</html>
